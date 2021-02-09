@@ -53,6 +53,33 @@ The host should be **db** (the name of the service used in the docker-compose fi
 
 The user should be **root** and the password is the one specified in the .env file in the **MYSQL_ROOT_PASSWORD** field.
 
+### Shared directories
+
+The line
+```
+volumes:
+    - .:/app
+```
+
+in
+
+```
+app:
+container_name: pw_local_env-php
+build:
+    context: .
+    dockerfile: Dockerfile
+restart: unless-stopped
+ports:
+    - "9030:9001"
+volumes:
+    - .:/app
+depends_on:
+    - db
+```
+
+is telling docker to share the `/app` directory inside docker with the `.` (current) directory on the host machine (your computer). If you change the contents of the php file `public/index.php` you will see the changes when accessing your web at [http://localhost:8080/](http://localhost:8080/).
+
 ## QA
 
 1. How to list all the running containers
