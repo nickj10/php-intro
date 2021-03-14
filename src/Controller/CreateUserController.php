@@ -34,7 +34,7 @@ final class CreateUserController
                 new DateTime(),
                 new DateTime()
             );
-            $this->container->get('user_repository')->save($user);
+            $this->userRepository->save($user);
         } catch (Exception $exception) {
             // You could render a .twig template here to show the error
             $response->getBody()
