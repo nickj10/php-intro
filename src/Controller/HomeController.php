@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 
 final class HomeController
 {
-    private ContainerInterface $c;
+    private $c;
 
     // You can also use https://stitcher.io/blog/constructor-promotion-in-php-8
     public function __construct(ContainerInterface $c)
