@@ -5,6 +5,7 @@ namespace SallePW\SlimApp\Controller;
 
 use DateTime;
 use Exception;
+use Slim\Views\Twig;
 use SallePW\SlimApp\Model\User;
 use SallePW\SlimApp\Model\UserRepository;
 use Psr\Container\ContainerInterface;
@@ -14,11 +15,11 @@ use Psr\Http\Message\ResponseInterface as Response;
 final class CreateUserController
 {
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(
+        private Twig $twig,
+        private UserRepository $userRepository
+    )
     {
-        $this->container = $container;
     }
 
     public function apply(Request $request, Response $response): Response
