@@ -5,9 +5,11 @@ use DI\Container;
 use Slim\Views\Twig;
 use SallePW\SlimApp\Controller\HomeController;
 use SallePW\SlimApp\Controller\VisitsController;
+use SallePW\SlimApp\Controller\CookieMonsterController;
+use SallePW\SlimApp\Controller\CreateUserController;
 use Psr\Container\ContainerInterface;
-use SallePW\SlimApp\Repository\MySQLUserRepository;
-use SallePW\SlimApp\Repository\PDOSingleton;
+use SallePW\SlimApp\Model\Repository\MySQLUserRepository;
+use SallePW\SlimApp\Model\Repository\PDOSingleton;
 
 $container = new Container();
 
@@ -52,7 +54,7 @@ $container->set(
 $container->set(
     CookieMonsterController::class,
     function (ContainerInterface $c) {
-        $controller = new CookieMonsterController($c);
+        $controller = new CookieMonsterController($c->get('view'));
         return $controller;
     }
 );
@@ -60,7 +62,7 @@ $container->set(
 $container->set(
     CreateUserController::class,
     function (ContainerInterface $c) {
-        $controller = new CreateUserController($c);
+        $controller = new CreateUserController($c->get('view'), $c->get('user_repository'));
         return $controller;
     }
 );
