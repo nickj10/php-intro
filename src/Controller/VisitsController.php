@@ -5,15 +5,15 @@ namespace SallePW\SlimApp\Controller;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
 
 final class VisitsController
 {
-    private $c;
+    private Twig $twig;
 
-    public function __construct(ContainerInterface $c)
+    public function __construct(Twig $twig)
     {
-        $this->c = $c;
+        $this->twig = $twig;
     }
 
     public function showVisits(Request $request, Response $response): Response
@@ -24,7 +24,7 @@ final class VisitsController
             $_SESSION['counter']++;
         }
 
-        return $this->c->get('view')->render(
+        return $this->twig->render(
             $response,
             'visits.twig',
             [

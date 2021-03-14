@@ -4,6 +4,7 @@ declare(strict_types=1);
 use SallePW\SlimApp\Controller\HomeController;
 use SallePW\SlimApp\Controller\VisitsController;
 use SallePW\SlimApp\Controller\CookieMonsterController;
+use SallePW\SlimApp\Controller\CreateUserController;
 use SallePW\SlimApp\Middleware\BeforeMiddleware;
 use SallePW\SlimApp\Middleware\StartSessionMiddleware;
 
@@ -21,3 +22,8 @@ $app->get(
     '/cookies',
     CookieMonsterController::class . ":showAdvice"
 )->setName('cookies');
+
+$app->post(
+    '/user',
+    CreateUserController::class . ":apply"
+)->setName('create_user');
