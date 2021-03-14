@@ -8,15 +8,15 @@ use Dflydev\FigCookies\FigResponseCookies;
 use Dflydev\FigCookies\SetCookie;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Container\ContainerInterface;
+use Slim\Views\Twig;
 
 final class CookieMonsterController
 {
-    private $c;
+    private Twig $twig;
 
-    public function __construct(ContainerInterface $c)
+    public function __construct(Twig $twig)
     {
-        $this->c = $c;
+        $this->twig = $twig;
     }
 
     public function showAdvice(Request $request, Response $response): Response
@@ -32,7 +32,7 @@ final class CookieMonsterController
             );
         }
 
-        return $this->c->get('view')->render(
+        return $this->twig->render(
             $response,
             'cookies.twig',
             [
