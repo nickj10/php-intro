@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use DI\Container;
@@ -7,6 +8,7 @@ use SallePW\SlimApp\Controller\HomeController;
 use SallePW\SlimApp\Controller\VisitsController;
 use SallePW\SlimApp\Controller\CookieMonsterController;
 use SallePW\SlimApp\Controller\CreateUserController;
+use SallePW\SlimApp\Controller\SimpleFormController;
 use Psr\Container\ContainerInterface;
 use SallePW\SlimApp\Model\Repository\MySQLUserRepository;
 use SallePW\SlimApp\Model\Repository\PDOSingleton;
@@ -63,6 +65,14 @@ $container->set(
     CreateUserController::class,
     function (ContainerInterface $c) {
         $controller = new CreateUserController($c->get('view'), $c->get('user_repository'));
+        return $controller;
+    }
+);
+
+$container->set(
+    SimpleFormController::class,
+    function (ContainerInterface $c) {
+        $controller = new SimpleFormController($c->get('view'));
         return $controller;
     }
 );
