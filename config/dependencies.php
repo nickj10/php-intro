@@ -10,6 +10,7 @@ use SallePW\SlimApp\Controller\CookieMonsterController;
 use SallePW\SlimApp\Controller\CreateUserController;
 use SallePW\SlimApp\Controller\SimpleFormController;
 use Psr\Container\ContainerInterface;
+use SallePW\SlimApp\Controller\FileController;
 use SallePW\SlimApp\Model\Repository\MySQLUserRepository;
 use SallePW\SlimApp\Model\Repository\PDOSingleton;
 
@@ -76,3 +77,12 @@ $container->set(
         return $controller;
     }
 );
+
+$container->set(
+    FileController::class,
+    function (ContainerInterface $c) {
+        $controller = new FileController($c->get('view'));
+        return $controller;
+    }
+);
+

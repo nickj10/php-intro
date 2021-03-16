@@ -7,6 +7,7 @@ use SallePW\SlimApp\Controller\VisitsController;
 use SallePW\SlimApp\Controller\CookieMonsterController;
 use SallePW\SlimApp\Controller\CreateUserController;
 use SallePW\SlimApp\Controller\SimpleFormController;
+use SallePW\SlimApp\Controller\FileController;
 use SallePW\SlimApp\Middleware\BeforeMiddleware;
 use SallePW\SlimApp\Middleware\StartSessionMiddleware;
 
@@ -39,3 +40,13 @@ $app->post(
     '/simple-form',
     SimpleFormController::class . ":handleFormSubmission"
 )->setName('handle-form');
+
+$app->get(
+    '/files',
+    FileController::class . ':showFileFormAction'
+);
+
+$app->post(
+    '/files',
+    FileController::class . ':uploadFileAction'
+)->setName('upload');
