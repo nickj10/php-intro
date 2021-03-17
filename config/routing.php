@@ -7,6 +7,7 @@ use SallePW\SlimApp\Controller\VisitsController;
 use SallePW\SlimApp\Controller\CookieMonsterController;
 use SallePW\SlimApp\Controller\CreateUserController;
 use SallePW\SlimApp\Controller\SimpleFormController;
+use SallePW\SlimApp\Controller\ImageController;
 use SallePW\SlimApp\Controller\FileController;
 use SallePW\SlimApp\Middleware\BeforeMiddleware;
 use SallePW\SlimApp\Middleware\StartSessionMiddleware;

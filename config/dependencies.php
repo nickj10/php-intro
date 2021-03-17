@@ -9,6 +9,8 @@ use SallePW\SlimApp\Controller\VisitsController;
 use SallePW\SlimApp\Controller\CookieMonsterController;
 use SallePW\SlimApp\Controller\CreateUserController;
 use SallePW\SlimApp\Controller\SimpleFormController;
+use SallePW\SlimApp\Service\CloudinaryService;
+use SallePW\SlimApp\Configuration\CloudinarySingleton;
 use Psr\Container\ContainerInterface;
 use SallePW\SlimApp\Controller\FileController;
 use SallePW\SlimApp\Model\Repository\MySQLUserRepository;
@@ -37,6 +39,22 @@ $container->set('user_repository', function (ContainerInterface $container) {
     return new MySQLUserRepository($container->get('db'));
 });
 
+$container->set('cld', function () {
+    return CloudinarySingleton::getInstance(
+        $_ENV['CLOUDINARY_CLOUD_NAME'],
+        $_ENV['CLOUDINARY_KEY'],
+        $_ENV['CLOUDINARY_SECRET']
+    );
+});
+
+
+
+$container->set(
+    'cld_service',
+    function (ContainerInterface $c) {
+        return new CloudinaryService($c->get('cld'));
+    }
+);
 
 $container->set(
     HomeController::class,
@@ -81,8 +99,7 @@ $container->set(
 $container->set(
     FileController::class,
     function (ContainerInterface $c) {
-        $controller = new FileController($c->get('view'));
+        $controller = new FileController($c->get('view'), $c->get('cld_service'));
         return $controller;
     }
 );
-

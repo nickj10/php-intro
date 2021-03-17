@@ -1,17 +1,21 @@
 <?php
+
 declare(strict_types=1);
 
 namespace SallePW\SlimApp\Controller;
 
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\Views\Twig;
+use Ramsey\Uuid\Uuid;
+
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use SallePW\SlimApp\Service\CloudinaryService;
 
 final class FileController
 {
-    private const UPLOADS_DIR = __DIR__ . '/../../uploads';
+    private const UPLOADS_DIR = __DIR__ . '/../../uploads/';
 
     private const UNEXPECTED_ERROR = "An unexpected error occurred uploading the file '%s'...";
 
@@ -21,9 +25,9 @@ final class FileController
     private const ALLOWED_EXTENSIONS = ['jpg', 'png', 'pdf'];
 
     public function __construct(
-        private Twig $twig
-    )
-    {
+        private Twig $twig,
+        private CloudinaryService $cld
+    ) {
     }
 
     public function showFileFormAction(Request $request, Response $response): Response
@@ -62,8 +66,17 @@ final class FileController
                 continue;
             }
 
-            // We generate a custom name here instead of using the one coming form the form
-            $uploadedFile->moveTo(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $name);
+            $myuuid = Uuid::uuid4();
+            $newFilename = $myuuid->toString() . "." . $format;
+            // We generate a custom name here instead of using the one coming from the form
+            $uploadedFile->moveTo(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $newFilename);
+            $photoUrl = $this->cld->modifyPhoto($uploadedFile, $myuuid);
+            $file_name = basename($photoUrl);
+            if (file_put_contents(self::UPLOADS_DIR . $file_name, file_get_contents($photoUrl))) {
+                echo "File downloaded successfully";
+            } else {
+                echo "File downloading failed.";
+            }
         }
 
         return $this->twig->render($response, 'upload.twig', [
