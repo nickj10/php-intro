@@ -7,6 +7,7 @@ namespace SallePW\SlimApp\Controller;
 use Psr\Http\Message\UploadedFileInterface;
 use Slim\Views\Twig;
 use Ramsey\Uuid\Uuid;
+use Intervention\Image\ImageManagerStatic as Image;
 
 
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -28,6 +29,7 @@ final class FileController
         private Twig $twig,
         private CloudinaryService $cld
     ) {
+        Image::configure(array('driver' => 'imagick'));
     }
 
     public function showFileFormAction(Request $request, Response $response): Response
@@ -70,13 +72,22 @@ final class FileController
             $newFilename = $myuuid->toString() . "." . $format;
             // We generate a custom name here instead of using the one coming from the form
             $uploadedFile->moveTo(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $newFilename);
-            $photoUrl = $this->cld->modifyPhoto($uploadedFile, $myuuid);
-            $file_name = basename($photoUrl);
-            if (file_put_contents(self::UPLOADS_DIR . $file_name, file_get_contents($photoUrl))) {
-                echo "File downloaded successfully";
-            } else {
-                echo "File downloading failed.";
-            }
+
+            // open an image file
+            $img = Image::make(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $newFilename);
+
+            // resize image instance
+            $img->resize(500, 500);
+
+            // save image in desired format
+            $img->save(self::UPLOADS_DIR . DIRECTORY_SEPARATOR . $newFilename);
+            // $photoUrl = $this->cld->modifyPhoto($uploadedFile, $myuuid);
+            // $file_name = basename($photoUrl);
+            // if (file_put_contents(self::UPLOADS_DIR . $file_name, file_get_contents($photoUrl))) {
+            //     echo "File downloaded successfully";
+            // } else {
+            //     echo "File downloading failed.";
+            // }
         }
 
         return $this->twig->render($response, 'upload.twig', [
